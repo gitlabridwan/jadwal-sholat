@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f1">
+  <meta name="description" content="Lihat jadwal salat harian dan bulanan untuk kota di Indonesia, lengkap dengan hitung mundur menuju waktu salat berikutnya.">
+  <meta property="og:title" content="Waktu Salat">
+  <meta property="og:description" content="Jadwal salat harian dan bulanan untuk kota di Indonesia.">
+  <meta property="og:type" content="website">
+  <title>Waktu Salat | Jadwal Salat Indonesia</title>
+  <link rel="icon" href="./assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="./assets/styles.css">
+  <script defer src="./assets/vendor/adhan.umd.min.js"></script>
+  <script defer src="./assets/cities.js"></script>
+  <script defer src="./assets/schedule.js"></script>
+  <script defer src="./assets/app.js"></script>
+</head>
+<body>
+  <a class="skip-link button-sm" href="#main">Lewati ke jadwal</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand title-1" href="./index.html" aria-label="Waktu Salat, beranda">
+        <span class="brand-mark"><i class="icon ph-moon-stars" aria-hidden="true"></i></span>
+        <span>Waktu Salat</span>
+      </a>
+
+      <nav class="view-nav" aria-label="Tampilan jadwal">
+        <button type="button" class="view-button button-sm" id="show-daily" aria-controls="daily-panel" aria-pressed="true">Harian</button>
+        <button type="button" class="view-button button-sm" id="show-monthly" aria-controls="monthly-panel" aria-pressed="false">Bulanan</button>
+      </nav>
+
+      <button type="button" class="city-button button-sm" id="open-cities" aria-haspopup="dialog" aria-controls="city-dialog" aria-label="Pilih kota">
+        <i class="icon ph-map-pin" aria-hidden="true"></i>
+        <span id="city-label">Jakarta</span>
+        <i class="icon ph-caret-down" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="shell main" id="main">
+    <div class="page-heading">
+      <div>
+        <h1 class="heading-1">Jadwal salat</h1>
+        <p class="page-date body-5">
+          <i class="icon ph-calendar-blank" aria-hidden="true"></i>
+          <time id="local-date">Hari ini</time>
+        </p>
+      </div>
+      <div class="local-time">
+        <span class="live-dot" aria-hidden="true"></span>
+        <div>
+          <span class="caption-4">Waktu setempat</span>
+          <time class="title-3" id="local-clock">--:--</time>
+        </div>
+      </div>
+    </div>
+
+    <noscript>
+      <p class="notice body-6">Aktifkan JavaScript untuk melihat jadwal. <a href="https://sihat.kemenag.go.id/jadwal-salat">Buka jadwal resmi Kemenag</a>.</p>
+    </noscript>
+    <p class="notice body-6" id="calculation-error" role="alert" hidden>
+      Jadwal belum bisa dihitung. Muat ulang halaman atau <a href="https://sihat.kemenag.go.id/jadwal-salat">buka jadwal resmi Kemenag</a>.
+    </p>
+
+    <section class="next-panel" id="next-panel" aria-labelledby="next-name">
+      <div class="next-content">
+        <span class="next-label caption-3"><span class="next-dot" aria-hidden="true"></span>Salat berikutnya</span>
+        <h2 class="heading-2" id="next-name">Memuat jadwal</h2>
+        <p class="body-5 next-meta" id="next-meta"></p>
+        <div class="countdown" role="timer" aria-label="Hitung mundur ke salat berikutnya">
+          <div class="countdown-unit">
+            <span class="time-digit" id="count-hours">--</span>
+            <span class="caption-4">Jam</span>
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="countdown-unit">
+            <span class="time-digit" id="count-minutes">--</span>
+            <span class="caption-4">Menit</span>
+          </div>
+          <span class="time-separator" aria-hidden="true">:</span>
+          <div class="countdown-unit">
+            <span class="time-digit" id="count-seconds">--</span>
+            <span class="caption-4">Detik</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="schedule-section" id="daily-panel" aria-labelledby="daily-heading">
+      <div class="section-heading">
+        <div aria-live="polite">
+          <h2 class="heading-5" id="daily-heading">Jadwal hari ini</h2>
+          <p class="body-6 section-date" id="daily-date" hidden></p>
+        </div>
+        <div class="date-actions" aria-label="Pilih hari">
+          <button type="button" id="previous-day" class="icon-button" aria-label="Hari sebelumnya"><i class="icon ph-caret-left" aria-hidden="true"></i></button>
+          <button type="button" id="reset-day" class="date-button button-sm">Hari ini</button>
+          <button type="button" id="next-day" class="icon-button" aria-label="Hari berikutnya"><i class="icon ph-caret-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <ul class="prayer-grid" id="daily-times" aria-label="Waktu salat harian"></ul>
+    </section>
+
+    <section class="schedule-section" id="monthly-panel" aria-labelledby="monthly-heading" hidden>
+      <div class="section-heading">
+        <div>
+          <h2 class="heading-5" id="monthly-heading">Jadwal bulanan</h2>
+          <p class="body-6 section-date" id="month-label" aria-live="polite"></p>
+        </div>
+        <div class="date-actions" aria-label="Pilih bulan">
+          <button type="button" id="previous-month" class="icon-button" aria-label="Bulan sebelumnya"><i class="icon ph-caret-left" aria-hidden="true"></i></button>
+          <button type="button" id="reset-month" class="date-button button-sm">Bulan ini</button>
+          <button type="button" id="next-month" class="icon-button" aria-label="Bulan berikutnya"><i class="icon ph-caret-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <p class="table-hint caption-2">Geser tabel untuk melihat semua waktu.</p>
+      <div class="table-scroll" id="table-scroll" role="region" aria-label="Tabel jadwal salat bulanan" tabindex="0">
+        <table class="month-table">
+          <thead>
+            <tr>
+              <th scope="col">Tanggal</th>
+              <th scope="col">Subuh</th>
+              <th scope="col">Terbit</th>
+              <th scope="col">Zuhur</th>
+              <th scope="col">Asar</th>
+              <th scope="col">Magrib</th>
+              <th scope="col">Isya</th>
+            </tr>
+          </thead>
+          <tbody id="monthly-times"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="source-note">
+      <p class="body-6"><i class="icon ph-info" aria-hidden="true"></i><span>Perkiraan waktu berdasarkan koordinat pusat kota. Ikuti jadwal Kemenag atau masjid setempat sebagai acuan.</span></p>
+      <a class="button-sm" href="https://sihat.kemenag.go.id/jadwal-salat" target="_blank" rel="noopener noreferrer">Jadwal resmi Kemenag <i class="icon ph-arrow-up-right" aria-hidden="true"></i></a>
+    </footer>
+  </main>
+
+  <dialog class="city-dialog" id="city-dialog" aria-labelledby="city-heading">
+    <div class="dialog-heading">
+      <h2 class="heading-5" id="city-heading">Pilih kota</h2>
+      <button type="button" class="icon-button" id="close-cities" aria-label="Tutup pilihan kota"><i class="icon ph-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="city-search">
+      <i class="icon ph-magnifying-glass" aria-hidden="true"></i>
+      <label class="visually-hidden" for="city-search">Cari kota atau provinsi</label>
+      <input type="search" class="body-3" id="city-search" placeholder="Cari kota atau provinsi" autocomplete="off" autofocus>
+    </div>
+    <ul class="city-list" id="city-list" aria-label="Daftar kota"></ul>
+    <p class="no-cities body-6" id="no-cities" role="status" hidden>Kota belum tersedia. Coba cari nama provinsi atau kota terdekat.</p>
+  </dialog>
+</body>
+</html>

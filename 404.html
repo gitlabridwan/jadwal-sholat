@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Halaman tidak ditemukan | Waktu Salat</title>
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f6f7f1; color: #172b22; font-family: system-ui, sans-serif; }
+    main { max-width: 32rem; margin: 24px; padding: 32px; border: 1px solid #dce2d6; border-radius: 24px; background: #fffefa; }
+    h1 { margin: 8px 0 24px; font-size: 1.875rem; line-height: 2.25rem; }
+    p { margin: 0; color: #506056; }
+    a { display: inline-block; padding: 8px 12px; border-radius: 8px; color: #fffefa; background: #214737; text-decoration: none; }
+    a:hover { background: #315b48; }
+    a:focus-visible { outline: 2px solid #488061; outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <main>
+    <p>Waktu Salat · 404</p>
+    <h1>Halaman tidak ditemukan</h1>
+    <a id="home" href="./index.html">Kembali ke jadwal</a>
+  </main>
+  <script>
+    if (location.protocol !== "file:") {
+      const project = location.pathname.match(/^\/[^/]+\//);
+      const onGitHub = location.hostname.endsWith(".github.io");
+      document.getElementById("home").href = onGitHub && project ? project[0] : "/";
+    }
+  </script>
+</body>
+</html>
